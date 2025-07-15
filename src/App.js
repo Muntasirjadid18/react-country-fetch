@@ -1,23 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import Country from './components/Country';
 
 function App() {
+  // Use consistent naming: countries (plural, lowercase)
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    fetch('https://restcountries.com/v3.1/all?fields=name,capital,region,population,flags,cca3')
+      .then(res => res.json())
+      .then(data => setCountries(data))
+      .catch(err => console.error(err));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="m-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {countries.map(country => (
+        <Country key={country.cca3} {...country} />
+      ))}
     </div>
   );
 }
